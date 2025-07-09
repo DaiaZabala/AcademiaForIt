@@ -2,31 +2,32 @@ import express from 'express';
 
 export const router = express.Router();
 
-let tasks = [];
+let invitados = [];
 let nextId = 1;
 
-// GET /api/tasks
+// GET /api/invitados
 router.get('/', (req, res) => {
-  res.json(tasks);
+  res.json(invitados);
 });
 
 
 router.post('/', (req, res) => {
-  const { title, description } = req.body;
+  const { nombre, dni,email,status } = req.body;
 
-  if (!title) {
-    return res.status(400).json({ error: 'El título es obligatorio.' });
+  if (!nombre || !dni) {
+    return res.status(400).json({ error: 'El nombre y el DNI son obligatorios.' });
   }
 
-  const newTask = {
+  const nuevoInvitado = {
     id: String(nextId++),
-    title,
-    description: description || '',
-    completed: false,
+    nombre,
+    dni,
+    email: email || '',
+    status: status || 'pendiente',
     createdAt: new Date()
   };
 
-  tasks.push(newTask);
+  invitados.push(nuevoInvitado);
 
-  res.status(201).json(newTask);
+  res.status(201).json(nuevoInvitado);
 });
