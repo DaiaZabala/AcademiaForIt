@@ -1,43 +1,48 @@
-
 .carrusel {
-  
-  background-size: cover;
-  background-position: center;
-  height: 300px;
+  position: relative;
+  height: 400px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
+
   color: white;
-  text-shadow: 1px 1px 5px black;
+  overflow: hidden;
 }
 
 .carrusel::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url("../assets/img/recien-casados-en-su-primer-baile.jpg");
+  background-image: url("../assets/img/fondoFiesta.jpg");
   background-size: cover;
   background-position: center;
-  opacity: 0.6; /* ← controla la transparencia */
+  background-repeat: no-repeat;
+  opacity: 0.5;
   z-index: 0;
 }
 
-.carrusel h1 {
+/* texto encima */
+.carrusel h1,
+.carrusel h2,
+.carrusel button {
   position: relative;
   z-index: 1;
-  text-shadow:
-    2px 2px 4px black,
-    -2px -2px 4px black,
-    2px -2px 4px black,
-    -2px 2px 4px black;
+  text-shadow: 1px 1px 5px black;
 }
 
-nav.navbar {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+/* botón visible */
+.carrusel button {
+  background-color: #black;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
 }
-
-.navbar-center span {
-  color: black;
+.carrusel button:hover {
+  background-color:gray;
 }
-
-
