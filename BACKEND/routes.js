@@ -5,6 +5,8 @@ export const router = express.Router();
 let invitados = [];
 let nextId = 1;
 
+let evento = [];
+let nextEventoId = 1;
 
 // GET /api/invitados
 router.get('/', (req, res) => {
@@ -114,5 +116,42 @@ router.delete('/:id', (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Error al eliminar el invitado.' });
+  }
+});
+
+// Crear evento
+router.post('/eventos', (req, res) => {
+  try {
+    const { nombre, fecha, ubicacion, descripcion, invitadosMax } = req.body;
+
+    if (!nombre || !fecha || !ubicacion) {
+      return res.status(400).json({ error: 'Nombre, fecha y ubicación son obligatorios.' });
+    }
+
+    const nuevoEvento = {
+      id: String(nextEventoId++),
+      nombre: nombre.trim(),
+      fecha: new Date(fecha),
+      ubicacion: ubicacion.trim(),
+      descripcion: descripcion?.trim() || '',
+      invitadosMax: invitadosMax ?? null,
+      creadoEn: new Date(),
+    };
+
+    eventos.push(nuevoEvento);
+    res.status(201).json(nuevoEvento);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al crear el evento.' });
+  }
+});
+
+// GET /api/eventos
+router.get('/eventos', (req, res) => {
+  try {
+    res.json(eventos);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener los eventos.' });
   }
 });
