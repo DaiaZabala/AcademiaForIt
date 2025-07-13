@@ -6,8 +6,6 @@ let invitados = [];
 let nextId = 1;
 
 
-
-
 // GET /api/invitados
 router.get('/', (req, res) => {
     try {
