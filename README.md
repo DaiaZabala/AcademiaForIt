@@ -80,13 +80,13 @@ Podés configurar estas variables si es necesario:
 ## 📸 Capturas de pantalla
 
 ![Login](./Screenshots/login.jpg)  
-![Home](/screenshots/Home.jpg)  
-![Crear evento](/screenshots/CrearEvento.jpg)  
-![Mis eventos](/screenshots/misEventos.jpg)  
-![Cargar invitados](/screenshots/cargarInvitados.jpg)  
-![Actualizar invitados](/screenshots/actualizarInvitados.jpg)  
-![Invitación enviada](/screenshots/invitacionEnviada.jpg)  
-![Invitado eliminado](/screenshots/invitadoEliminado.jpg)  
+![Home](./screenshots/Home.jpg)  
+![Crear evento](./screenshots/CrearEvento.jpg)  
+![Mis eventos](./screenshots/misEventos.jpg)  
+![Cargar invitados](./screenshots/cargarInvitados.jpg)  
+![Actualizar invitados](./screenshots/actualizarInvitados.jpg)  
+![Invitación enviada](./screenshots/invitacionEnviada.jpg)  
+![Invitado eliminado](./screenshots/invitadoEliminado.jpg)  
 
 ---
 
