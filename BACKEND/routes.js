@@ -1,49 +1,53 @@
-import express from 'express';
+import express from "express";
 
 export const router = express.Router();
 
 let invitados = [];
 let nextId = 1;
 
-let evento = [];
+let eventos = [];
 let nextEventoId = 1;
 
 // GET /api/invitados
-router.get('/', (req, res) => {
+router.get("/", (req, res) => {
   try {
     const { eventoId } = req.query;
 
     if (eventoId) {
       // Filtro por eventoId como string (por si viene como número)
-      const invitadosFiltrados = invitados.filter(inv => String(inv.eventoId) === String(eventoId));
+      const invitadosFiltrados = invitados.filter(
+        (inv) => String(inv.eventoId) === String(eventoId)
+      );
       return res.json(invitadosFiltrados);
     }
 
     res.json(invitados);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error al obtener los invitados.' });
+    res.status(500).json({ error: "Error al obtener los invitados." });
   }
 });
 
-router.get('/total', (req, res) => {
+router.get("/total", (req, res) => {
   try {
     res.send(`Total de invitados: ${invitados.length}`);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error al calcular el total de invitados.' });
+    res.status(500).json({ error: "Error al calcular el total de invitados." });
   }
 });
 
-router.post('/', (req, res) => {
+router.post("/", (req, res) => {
   try {
     if (
       !req.body.nombre ||
-      req.body.nombre.trim() === '' ||
+      req.body.nombre.trim() === "" ||
       !req.body.dni ||
-      req.body.dni.trim() === ''
+      req.body.dni.trim() === ""
     ) {
-      return res.status(400).json({ error: 'Debe ingresar nombre y DNI válidos.' });
+      return res
+        .status(400)
+        .json({ error: "Debe ingresar nombre y DNI válidos." });
     }
 
     const { nombre, dni, email, status, eventoId } = req.body;
@@ -52,9 +56,9 @@ router.post('/', (req, res) => {
       id: String(nextId++),
       nombre: nombre.trim(),
       dni: dni.trim(),
-      email: email || '',
-      status: status || 'pendiente',
-      eventoId: eventoId ? String(eventoId) : null, 
+      email: email || "",
+      status: status || "pendiente",
+      eventoId: eventoId ? String(eventoId) : null,
       createdAt: new Date(),
     };
 
@@ -63,23 +67,25 @@ router.post('/', (req, res) => {
     res.status(201).json(nuevoInvitado);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error al agregar el invitado.' });
+    res.status(500).json({ error: "Error al agregar el invitado." });
   }
 });
 
-router.put('/:id', (req, res) => {
+router.put("/:id", (req, res) => {
   try {
     const { id } = req.params;
     const { nombre, dni, email, status, eventoId } = req.body;
 
-    if (!nombre || nombre.trim() === '' || !dni || dni.trim() === '') {
-      return res.status(400).json({ error: 'El nombre y el DNI son obligatorios.' });
+    if (!nombre || nombre.trim() === "" || !dni || dni.trim() === "") {
+      return res
+        .status(400)
+        .json({ error: "El nombre y el DNI son obligatorios." });
     }
 
-    const invitado = invitados.find(inv => inv.id === id);
+    const invitado = invitados.find((inv) => inv.id === id);
 
     if (!invitado) {
-      return res.status(404).json({ error: 'Invitado no encontrado.' });
+      return res.status(404).json({ error: "Invitado no encontrado." });
     }
 
     invitado.nombre = nombre.trim();
@@ -89,51 +95,54 @@ router.put('/:id', (req, res) => {
     if (eventoId !== undefined) invitado.eventoId = String(eventoId);
 
     res.json({
-      mensaje: 'Datos actualizados correctamente.',
-      invitado
+      mensaje: "Datos actualizados correctamente.",
+      invitado,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error al actualizar el invitado.' });
+    res.status(500).json({ error: "Error al actualizar el invitado." });
   }
 });
 
-
 // DELETE /api/invitados/:id
-router.delete('/:id', (req, res) => {
+router.delete("/:id", (req, res) => {
   try {
     const { id } = req.params;
 
-    const index = invitados.findIndex(inv => inv.id === id);
+    const index = invitados.findIndex((inv) => inv.id === id);
 
     if (index === -1) {
-      return res.status(404).json({ error: 'Invitado no encontrado.' });
+      return res.status(404).json({ error: "Invitado no encontrado." });
     }
 
     const eliminado = invitados.splice(index, 1); // elimina 1 invitado
 
     res.json({
       mensaje: `El invitado con ID ${id} fue eliminado correctamente.`,
-      eliminado: eliminado[0]
+      eliminado: eliminado[0],
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error al eliminar el invitado.' });
+    res.status(500).json({ error: "Error al eliminar el invitado." });
   }
 });
 
 // POST /api/invitados/:id/enviar-invitacion
-router.post('/:id/enviar-invitacion', (req, res) => {
+router.post("/:id/enviar-invitacion", (req, res) => {
   try {
     const { id } = req.params;
-    const invitado = invitados.find(inv => inv.id === id);
+    const invitado = invitados.find((inv) => inv.id === id);
 
     if (!invitado) {
-      return res.status(404).json({ error: 'Invitado no encontrado.' });
+      return res.status(404).json({ error: "Invitado no encontrado." });
     }
 
-    if (!invitado.email || invitado.email.trim() === '') {
-      return res.status(400).json({ error: 'El invitado no tiene email para enviar la invitación.' });
+    if (!invitado.email || invitado.email.trim() === "") {
+      return res
+        .status(400)
+        .json({
+          error: "El invitado no tiene email para enviar la invitación.",
+        });
     }
 
     // Simulación de envío de correo
@@ -141,9 +150,10 @@ router.post('/:id/enviar-invitacion', (req, res) => {
 
     // Aquí podrías integrar tu servicio de email real si quieres
 
-    return res.json({ mensaje: 'Invitación enviada correctamente' });
+    return res.json({ mensaje: "Invitación enviada correctamente" });
   } catch (err) {
-    console.error('Error al enviar invitación:', err);
-    res.status(500).json({ error: 'Error al enviar la invitación.' });
+    console.error("Error al enviar invitación:", err);
+    res.status(500).json({ error: "Error al enviar la invitación." });
   }
 });
+

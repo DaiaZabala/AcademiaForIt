@@ -44,4 +44,23 @@ router.get('/', (req, res) => {
   }
 });
 
+// POST /api/eventos/login - Login por nombre del evento
+router.post('/login', (req, res) => {
+  const { nombreEvento } = req.body;
+
+  if (!nombreEvento || nombreEvento.trim() === '') {
+    return res.status(400).json({ error: 'Debe ingresar el nombre del evento.' });
+  }
+
+  const eventoEncontrado = eventos.find(e =>
+    e.nombre.toLowerCase() === nombreEvento.trim().toLowerCase()
+  );
+
+  if (!eventoEncontrado) {
+    return res.status(404).json({ error: 'Evento no encontrado.' });
+  }
+
+  return res.json({ mensaje: 'Login exitoso', evento: eventoEncontrado });
+});
+
 export default router;
