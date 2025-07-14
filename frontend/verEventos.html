@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mis Eventos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../frontend/src/assets/img/favicon.ico" />
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="../frontend/index.html">
+        <img src="../frontend/src/assets/img/android-chrome-512x512.png" alt="Logo" width="40" height="40" class="me-2" />
+      </a>
+      <div class="navbar-center position-absolute top-50 start-50 translate-middle">
+        <span class="fw-bold fs-4 text-black">EventDai</span>
+      </div>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="../frontend/index.html">HOME</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../frontend/eventos.html">Crear Evento</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Iniciar Sesión</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../frontend/verEventos.html">Mis Eventos</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h2 class="text-2xl font-bold text-center mb-6">Mis Eventos</h2>
+    <ul id="eventos-lista" class="list-group"></ul>
+  </div>
+
+  <script>
+     async function cargarEventos() {
+  try {
+    const res = await fetch('http://localhost:3000/api/eventos');
+    const eventos = await res.json();
+
+    const lista = document.getElementById('eventos-lista');
+    lista.innerHTML = '';
+
+    if (eventos.length === 0) {
+      lista.innerHTML = '<li class="list-group-item text-center text-muted">Todavía no se cargaron eventos.</li>';
+      return;
+    }
+
+    eventos.forEach(e => {
+      const li = document.createElement('li');
+      li.className = 'list-group-item mb-3';
+
+      li.innerHTML = `
+        <h3>${e.nombre}</h3>
+        <p>${new Date(e.fecha).toLocaleDateString()} - ${e.ubicacion}</p>
+        <p>${e.descripcion}</p>
+        <a href="agregarInvitados.html?eventoId=${e.id}" class="btn btn-dark fw-bold mt-2">Agregar invitados</a>`;
+
+      lista.appendChild(li);
+    });
+  } catch (error) {
+    console.error('Error al cargar eventos:', error);
+  }
+}
+
+cargarEventos();
+  </script>
+</body>
+</html>

@@ -13,12 +13,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+
 const eventos = ref([])
 
 onMounted(async () => {
-  const res = await fetch(import.meta.env.VITE_API_URL + '/eventos')
+  const res = await fetch(import.meta.env.VITE_API_URL + '/api/eventos') // fijate que la ruta coincida
   eventos.value = await res.json()
 })
 </script>
-
-

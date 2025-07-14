@@ -10,7 +10,15 @@ let nextEventoId = 1;
 
 // GET /api/invitados
 router.get('/', (req, res) => {
-    try {
+  try {
+    const { eventoId } = req.query;
+
+    if (eventoId) {
+      // Filtro por eventoId como string (por si viene como número)
+      const invitadosFiltrados = invitados.filter(inv => String(inv.eventoId) === String(eventoId));
+      return res.json(invitadosFiltrados);
+    }
+
     res.json(invitados);
   } catch (err) {
     console.error(err);
@@ -29,17 +37,16 @@ router.get('/total', (req, res) => {
 
 router.post('/', (req, res) => {
   try {
-    // Validar que body sea objeto y tenga nombre y dni no vacíos o solo espacios
     if (
-  !req.body.nombre ||
-  req.body.nombre.trim() === '' ||
-  !req.body.dni ||
-  req.body.dni.trim() === ''
-) {
-  return res.status(400).json({ error: 'Debe ingresar nombre y DNI válidos.' });
-}
+      !req.body.nombre ||
+      req.body.nombre.trim() === '' ||
+      !req.body.dni ||
+      req.body.dni.trim() === ''
+    ) {
+      return res.status(400).json({ error: 'Debe ingresar nombre y DNI válidos.' });
+    }
 
-    const { nombre, dni, email, status } = req.body;
+    const { nombre, dni, email, status, eventoId } = req.body;
 
     const nuevoInvitado = {
       id: String(nextId++),
@@ -47,6 +54,7 @@ router.post('/', (req, res) => {
       dni: dni.trim(),
       email: email || '',
       status: status || 'pendiente',
+      eventoId: eventoId ? String(eventoId) : null, 
       createdAt: new Date(),
     };
 
@@ -62,13 +70,9 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, dni, email, status } = req.body;
+    const { nombre, dni, email, status, eventoId } = req.body;
 
-    // Validar que nombre y dni sean strings no vacíos
-    if (
-      !nombre || nombre.trim() === '' ||
-      !dni || dni.trim() === ''
-    ) {
+    if (!nombre || nombre.trim() === '' || !dni || dni.trim() === '') {
       return res.status(400).json({ error: 'El nombre y el DNI son obligatorios.' });
     }
 
@@ -78,11 +82,11 @@ router.put('/:id', (req, res) => {
       return res.status(404).json({ error: 'Invitado no encontrado.' });
     }
 
-    // Actualizar campos
     invitado.nombre = nombre.trim();
     invitado.dni = dni.trim();
     if (email !== undefined) invitado.email = email;
     if (status !== undefined) invitado.status = status;
+    if (eventoId !== undefined) invitado.eventoId = String(eventoId);
 
     res.json({
       mensaje: 'Datos actualizados correctamente.',
@@ -95,19 +99,18 @@ router.put('/:id', (req, res) => {
 });
 
 
-
 // DELETE /api/invitados/:id
 router.delete('/:id', (req, res) => {
-  try{
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const index = invitados.findIndex((inv) => inv.id === id);
+    const index = invitados.findIndex(inv => inv.id === id);
 
-  if (index === -1) {
-    return res.status(404).json({ error: 'Invitado no encontrado.' });
-  }
+    if (index === -1) {
+      return res.status(404).json({ error: 'Invitado no encontrado.' });
+    }
 
-  const eliminado = invitados.splice(index, 1); // elimina 1 invitado
+    const eliminado = invitados.splice(index, 1); // elimina 1 invitado
 
     res.json({
       mensaje: `El invitado con ID ${id} fue eliminado correctamente.`,
@@ -119,39 +122,28 @@ router.delete('/:id', (req, res) => {
   }
 });
 
-// Crear evento
-router.post('/eventos', (req, res) => {
+// POST /api/invitados/:id/enviar-invitacion
+router.post('/:id/enviar-invitacion', (req, res) => {
   try {
-    const { nombre, fecha, ubicacion, descripcion, invitadosMax } = req.body;
+    const { id } = req.params;
+    const invitado = invitados.find(inv => inv.id === id);
 
-    if (!nombre || !fecha || !ubicacion) {
-      return res.status(400).json({ error: 'Nombre, fecha y ubicación son obligatorios.' });
+    if (!invitado) {
+      return res.status(404).json({ error: 'Invitado no encontrado.' });
     }
 
-    const nuevoEvento = {
-      id: String(nextEventoId++),
-      nombre: nombre.trim(),
-      fecha: new Date(fecha),
-      ubicacion: ubicacion.trim(),
-      descripcion: descripcion?.trim() || '',
-      invitadosMax: invitadosMax ?? null,
-      creadoEn: new Date(),
-    };
+    if (!invitado.email || invitado.email.trim() === '') {
+      return res.status(400).json({ error: 'El invitado no tiene email para enviar la invitación.' });
+    }
 
-    eventos.push(nuevoEvento);
-    res.status(201).json(nuevoEvento);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al crear el evento.' });
-  }
-});
+    // Simulación de envío de correo
+    console.log(`🟢 Simulando envío de invitación a: ${invitado.email}`);
 
-// GET /api/eventos
-router.get('/eventos', (req, res) => {
-  try {
-    res.json(eventos);
+    // Aquí podrías integrar tu servicio de email real si quieres
+
+    return res.json({ mensaje: 'Invitación enviada correctamente' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al obtener los eventos.' });
+    console.error('Error al enviar invitación:', err);
+    res.status(500).json({ error: 'Error al enviar la invitación.' });
   }
 });

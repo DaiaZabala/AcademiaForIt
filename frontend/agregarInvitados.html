@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cargar Invitados - EventDai</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="icon" href="../frontend/src/assets/img/favicon.ico" type="image/x-icon" />
+</head>
+
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="../frontend/index.html">
+                <img src="../frontend/src/assets/img/android-chrome-512x512.png" alt="Logo" width="40" height="40" class="me-2" />
+            </a>
+            <div class="navbar-center position-absolute top-50 start-50 translate-middle">
+                <span class="fw-bold fs-4 text-black">EventDai</span>
+            </div>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="../frontend/index.html">HOME</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../frontend/eventos.html">Crear Evento</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Iniciar Sesión</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../frontend/verEventos.html">Mis Eventos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Cargar Invitados</h2>
+
+        <form id="form-invitado" class="border p-4 rounded bg-white shadow-sm">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" id="nombre" class="form-control" placeholder="Nombre completo" required />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" id="dni" class="form-control" placeholder="DNI" required />
+                </div>
+                <div class="col-md-3">
+                    <input type="email" id="email" class="form-control" placeholder="Correo (opcional)" />
+                </div>
+                <div class="col-md-2">
+                    <select id="status" class="form-select">
+                        <option value="pendiente">Pendiente</option>
+                        <option value="confirmado">Confirmado</option>
+                        <option value="rechazado">Rechazado</option>
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="d-grid">
+                <button type="submit" class="btn btn-dark fw-bold">Agregar Invitado</button>
+            </div>
+        </form>
+
+        <h4 class="mt-5 mb-3">
+            Lista de invitados
+            <span id="total-invitados" class="badge bg-secondary ms-2">0</span>
+        </h4>
+        <ul id="lista-invitados" class="list-group"></ul>
+    </div>
+
+    <script>
+        const form = document.getElementById("form-invitado");
+        const lista = document.getElementById("lista-invitados");
+        const totalInvSpan = document.getElementById('total-invitados');
+        const API = "http://localhost:3000/api/invitados";
+
+        const params = new URLSearchParams(window.location.search);
+        const eventoId = params.get("eventoId");
+        let idEditando = null;
+
+        async function cargarInvitados() {
+            lista.innerHTML = "";
+            try {
+                const res = await fetch(`${API}?eventoId=${eventoId}`);
+                const invitados = await res.json();
+                totalInvSpan.textContent = invitados.length;
+
+                invitados.forEach(inv => {
+                    const item = document.createElement("li");
+                    item.className = "list-group-item d-flex justify-content-between align-items-center";
+                    item.innerHTML = `
+                        <div>
+                            <strong>${inv.nombre}</strong> (${inv.dni}) - ${inv.status}
+                            ${inv.email ? `<br><small>${inv.email}</small>` : ""}
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-primary" onclick="editarInvitado('${inv.id}')">Editar</button>
+                            <button class="btn btn-sm btn-danger" onclick="eliminarInvitado('${inv.id}')">Eliminar</button>
+                            ${inv.email ? `<button class="btn btn-sm btn-success" onclick="enviarInvitacion('${inv.id}', this)">Enviar invitación</button>` : ""}
+                        </div>
+                    `;
+                    lista.appendChild(item);
+                });
+            } catch (err) {
+                console.error("Error al cargar invitados:", err);
+            }
+        }
+
+        async function editarInvitado(id) {
+            try {
+                const res = await fetch(`${API}`);
+                const invitados = await res.json();
+                const inv = invitados.find(i => i.id === id);
+                if (!inv) return alert("Invitado no encontrado");
+
+                document.getElementById("nombre").value = inv.nombre;
+                document.getElementById("dni").value = inv.dni;
+                document.getElementById("email").value = inv.email;
+                document.getElementById("status").value = inv.status;
+
+                idEditando = id;
+                form.querySelector("button[type='submit']").textContent = "Actualizar Invitado";
+            } catch (err) {
+                console.error(err);
+                alert("Error al cargar datos del invitado");
+            }
+        }
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const nuevo = {
+                nombre: document.getElementById("nombre").value.trim(),
+                dni: document.getElementById("dni").value.trim(),
+                email: document.getElementById("email").value.trim(),
+                status: document.getElementById("status").value,
+                eventoId: eventoId,
+            };
+
+            try {
+                let res;
+                if (idEditando) {
+                    res = await fetch(`${API}/${idEditando}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(nuevo),
+                    });
+                } else {
+                    res = await fetch(API, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(nuevo),
+                    });
+                }
+
+                if (!res.ok) throw new Error("Error en la operación");
+
+                form.reset();
+                idEditando = null;
+                form.querySelector("button[type='submit']").textContent = "Agregar Invitado";
+                cargarInvitados();
+            } catch (err) {
+                alert("Hubo un error al guardar el invitado.");
+                console.error(err);
+            }
+        });
+
+        async function eliminarInvitado(id) {
+            try {
+                await fetch(`${API}/${id}`, { method: "DELETE" });
+                cargarInvitados();
+            } catch (err) {
+                console.error("Error al eliminar:", err);
+            }
+        }
+
+        async function enviarInvitacion(id, boton) {
+            try {
+                const res = await fetch(`${API}/${id}/enviar-invitacion`, { method: 'POST' });
+                if (!res.ok) throw new Error();
+                boton.disabled = true;
+                boton.textContent = 'Invitación enviada';
+                boton.classList.remove('btn-success');
+                boton.classList.add('btn-secondary');
+            } catch (err) {
+                alert('No se pudo enviar la invitación');
+            }
+        }
+
+        cargarInvitados();
+    </script>
+</body>
+
+</html>
+
