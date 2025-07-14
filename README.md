@@ -79,7 +79,7 @@ Podés configurar estas variables si es necesario:
 
 ## 📸 Capturas de pantalla
 
-![Login](/Screenshots/login.jpg)  
+![Login](./Screenshots/login.jpg)  
 ![Home](/screenshots/Home.jpg)  
 ![Crear evento](/screenshots/CrearEvento.jpg)  
 ![Mis eventos](/screenshots/misEventos.jpg)  
