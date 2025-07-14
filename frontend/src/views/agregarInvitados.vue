@@ -51,11 +51,21 @@
 
       <h4 class="mt-5 mb-3">
         Lista de invitados
-        <span class="badge bg-secondary ms-2">{{ invitados.length }}</span>
+        <span class="badge bg-secondary ms-2">{{ invitadosFiltrados.length }}</span>
       </h4>
+
+      <!-- Filtros -->
+      <div class="btn-group mb-3" role="group">
+        <button class="btn btn-outline-dark" @click="filtro = 'todos'">Todos</button>
+        <button class="btn btn-outline-success" @click="filtro = 'confirmado'">Confirmados</button>
+        <button class="btn btn-outline-warning" @click="filtro = 'pendiente'">Pendientes</button>
+        <button class="btn btn-outline-danger" @click="filtro = 'rechazado'">Rechazados</button>
+      </div>
+
+      <!-- Lista -->
       <ul class="list-group">
         <li
-          v-for="inv in invitados"
+          v-for="inv in invitadosFiltrados"
           :key="inv.id"
           class="list-group-item d-flex justify-content-between align-items-center"
         >
@@ -83,7 +93,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 
 export default {
@@ -94,6 +104,7 @@ export default {
 
     const invitados = ref([]);
     const idEditando = ref(null);
+    const filtro = ref("todos");
 
     const form = ref({
       nombre: "",
@@ -168,7 +179,6 @@ export default {
       try {
         const res = await fetch(`${API}/${id}/enviar-invitacion`, { method: "POST" });
         if (!res.ok) throw new Error();
-        // Marcar como enviado para cambiar estado y botón
         const inv = invitados.value.find((i) => i.id === id);
         if (inv) inv.enviado = true;
       } catch {
@@ -186,14 +196,21 @@ export default {
       idEditando.value = null;
     };
 
+    const invitadosFiltrados = computed(() => {
+      if (filtro.value === "todos") return invitados.value;
+      return invitados.value.filter((inv) => inv.status === filtro.value);
+    });
+
     onMounted(() => {
       cargarInvitados();
     });
 
     return {
       invitados,
+      invitadosFiltrados,
       form,
       idEditando,
+      filtro,
       guardarInvitado,
       editarInvitado,
       eliminarInvitado,
