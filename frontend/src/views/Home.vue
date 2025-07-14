@@ -99,8 +99,7 @@ export default {
   name: 'Home',
   methods: {
     empezarGratis() {
-      // Por ejemplo, redirigir a crear evento o login
-      this.$router.push('/login');
+      this.$router.push('/crear-evento');
     },
   },
 };

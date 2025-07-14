@@ -1,64 +1,101 @@
-# App de Gestión de Tareas
+# 📋 App de Gestión de Tareas
 
-Aplicación web para crear, editar, eliminar y listar tareas, usando React y Express.
+Aplicación web simple para crear, editar, eliminar y listar eventos e invitados. Está dividida en dos partes: un backend con Express y un frontend con React (Vite).
 
-## Tecnologías usadas
+---
 
-- Backend: Node.js, Express
-- Frontend: React, Vite
-- Estilos: CSS básico
-- Control de versiones: Git
+## ⚙️ Tecnologías usadas
 
-## Instalación
+- 🔙 **Backend:** Node.js + Express (API REST)
+- 🔜 **Frontend:** Vue + Vite
+- 🎨 **Estilos:** CSS básico
+- 🔧 **Control de versiones:** Git
 
-1. Clonar el repositorio:
+---
+
+## 🚀 Instalación y ejecución
+
+### 1. Clonar el repositorio
+
 ```bash
-git clone https://github.com/tuusuario/tu-repo.git
+git clone https://github.com/DaiaZabala/AcademiaForIt
+cd AcademiaForIt
 ```
 
-2. Instalar dependencias backend:
+### 2. Instalar dependencias del backend
+
 ```bash
 cd backend
 npm install
 ```
 
-3. Ejecutar backend:
+### 3. Ejecutar el backend
+
 ```bash
 npm start
 ```
 
-4. Instalar dependencias frontend:
+> El backend por defecto corre en `http://localhost:3000`
+
+### 4. Instalar dependencias del frontend
+
 ```bash
 cd ../frontend
 npm install
 ```
 
-5. Ejecutar frontend:
+### 5. Ejecutar el frontend
+
 ```bash
 npm run dev
 ```
 
-## Uso
+> El frontend por defecto corre en `http://localhost:5173`
 
-- Abrir en el navegador http://localhost:3000
-- Crear tareas desde el formulario
-- Listar tareas en la página principal
-- Editar o eliminar tareas usando los botones correspondientes
+---
 
-## Variables de entorno
+## 🧪 Uso
 
-- BACKEND_URL: URL base de la API (ej: http://localhost:3000)
-- FRONTEND_PORT: Puerto donde corre el frontend (ej: 5173)
+- Acceder al frontend desde tu navegador:(http://localhost:5173)
+- Iniciar sesión para comenzar a gestionar tus eventos
+- Crear nuevos eventos con nombre, descripción y fecha
+- Visualizar un listado de todos tus eventos creados
+- Agregar invitados a cada evento (manual o por carga masiva)
+- Editar o eliminar información de los invitados
+- Confirmar asistencia de invitados
+- Ver mensajes de confirmación o eliminación en pantalla
 
-## Capturas de pantalla
+---
 
-![Lista de tareas](./screenshots/lista.png)
-![Formulario de tarea](./screenshots/formulario.png)
+## 🌐 Variables de entorno
 
-## Autor
+Podés configurar estas variables si es necesario:
 
-Daiana Zabala
+- `BACKEND_URL`: URL base de la API (por ejemplo, `http://localhost:3000`)
+- `FRONTEND_PORT`: Puerto del frontend (por defecto Vite usa `5173`)
 
-## Licencia
+---
 
-MIT
+
+## 📸 Capturas de pantalla
+
+![Login](/Screenshots/login.jpg)  
+![Home](/screenshots/Home.jpg)  
+![Crear evento](/screenshots/CrearEvento.jpg)  
+![Mis eventos](/screenshots/misEventos.jpg)  
+![Cargar invitados](/screenshots/cargarInvitados.jpg)  
+![Actualizar invitados](/screenshots/actualizarInvitados.jpg)  
+![Invitación enviada](/screenshots/invitacionEnviada.jpg)  
+![Invitado eliminado](/screenshots/invitadoEliminado.jpg)  
+
+---
+
+## 👩‍💻 Autor
+
+**Daiana Zabala**
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia MIT. Podés usarlo libremente.
