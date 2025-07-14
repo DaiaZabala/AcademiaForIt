@@ -1,6 +1,6 @@
-# 📋 App de Gestión de Tareas
+# 📋 App de Gestión de eventos
 
-Aplicación web simple para crear, editar, eliminar y listar eventos e invitados. Está dividida en dos partes: un backend con Express y un frontend con React (Vite).
+Aplicación web simple para crear, editar, eliminar y listar eventos e invitados. Está dividida en dos partes: un backend con Express y un frontend con Vue (Vite).
 
 ---
 
