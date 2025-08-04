@@ -98,7 +98,7 @@ import { useRoute } from "vue-router";
 
 export default {
   setup() {
-   const API_BASE = import.meta.env.VITE_BACKEND_URL;
+     const API_BASE = import.meta.env.VITE_BACKEND_URL;
     const route = useRoute();
     const eventoId = route.query.eventoId;
     const API = `${API_BASE}/api/invitados`;
