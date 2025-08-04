@@ -6,8 +6,9 @@ import eventosRouter from '../backend/eventos.js';
 
 
 
+const port = process.env.PORT || 3000;
 const app = express();
-const port = 3000;
+
 
 app.use(cors()); // Permite cualquier origen temporalmente
 
@@ -33,5 +34,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Servidor escuchando en http://localhost:${port}`);
+  console.log(`Servidor corriendo en el puerto ${port}`);
 });
