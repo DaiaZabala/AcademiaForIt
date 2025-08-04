@@ -1,0 +1,20 @@
+{
+  "name": "academiaforit",
+  "version": "1.0.0",
+  "description": "Aplicación web simple para crear, editar, eliminar y listar eventos e invitados. Está dividida en dos partes: un backend con Express y un frontend con Vue (Vite).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaiaZabala/AcademiaForIt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DaiaZabala/AcademiaForIt/issues"
+  },
+  "homepage": "https://github.com/DaiaZabala/AcademiaForIt#readme"
+}
