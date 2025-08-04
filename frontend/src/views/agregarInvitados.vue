@@ -98,9 +98,10 @@ import { useRoute } from "vue-router";
 
 export default {
   setup() {
+   const API_BASE = import.meta.env.VITE_BACKEND_URL;
     const route = useRoute();
-    const API = "http://localhost:3000/api/invitados";
     const eventoId = route.query.eventoId;
+    const API = `${API_BASE}/api/invitados`;
 
     const invitados = ref([]);
     const idEditando = ref(null);
@@ -175,7 +176,7 @@ export default {
       }
     };
 
-    const enviarInvitacion = async (id, boton) => {
+    const enviarInvitacion = async (id) => {
       try {
         const res = await fetch(`${API}/${id}/enviar-invitacion`, { method: "POST" });
         if (!res.ok) throw new Error();

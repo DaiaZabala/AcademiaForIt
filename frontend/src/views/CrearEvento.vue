@@ -84,6 +84,8 @@
 </template>
 
 <script>
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 export default {
   name: 'CrearEvento',
   data() {
@@ -99,7 +101,7 @@ export default {
   methods: {
     async crearEvento() {
       try {
-        const res = await fetch('http://localhost:3000/api/eventos', {
+        const res = await fetch(`${API_BASE}/api/eventos`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(this.evento),
@@ -116,3 +118,4 @@ export default {
   },
 };
 </script>
+

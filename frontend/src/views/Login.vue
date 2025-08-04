@@ -61,6 +61,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const nombreEvento = ref('')
 const loading = ref(false)
+const API_BASE = import.meta.env.VITE_API_BASE_URL
 
 async function handleSubmit() {
   if (!nombreEvento.value.trim()) {
@@ -70,7 +71,7 @@ async function handleSubmit() {
 
   loading.value = true
   try {
-    const res = await fetch('http://localhost:3000/api/eventos/login', {
+    const res = await fetch(`${API_BASE}/api/eventos/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nombreEvento: nombreEvento.value.trim() }),
@@ -94,3 +95,4 @@ async function handleSubmit() {
   }
 }
 </script>
+
