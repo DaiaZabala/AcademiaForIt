@@ -1,8 +1,8 @@
 import express from "express";
 import morgan from "morgan";
 import cors from 'cors';
-import { router as invitadosRouter } from "../backend/routes.js";
-import eventosRouter from '../backend/eventos.js';
+import { router as invitadosRouter } from "../BACKEND/routes.js";
+import eventosRouter from '../BACKEND/eventos.js';
 
 
 
