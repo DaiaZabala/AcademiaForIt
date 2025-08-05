@@ -16,8 +16,5 @@
     "@vitejs/plugin-vue": "^6.0.0",
     "chmod-cli": "^2.0.1",
     "vite": "^7.0.6"
-  },
-  "engines": {
-    "node": ">=18.0.0"
   }
 }
