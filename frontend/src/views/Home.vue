@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-light py-4">
+  <div class="bg-light py-4">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <router-link to="/" class="navbar-brand d-flex align-items-center">
@@ -33,7 +33,7 @@
         <p v-if="errorMsg" class="text-danger mt-3">{{ errorMsg }}</p>
       </div>
     </div>
- <footer class="py-4 mt-5" style="background: linear-gradient(90deg, #8e44ad, #9b59b6); color: white;">
+    <footer class="py-4 mt-5" style="background: linear-gradient(90deg, #8e44ad, #9b59b6); color: white;">
       <div class="container">
         <div class="row text-center text-md-start">
           <div class="col-md-4 mb-4 mb-md-0">
@@ -82,7 +82,6 @@ export default {
       try {
         // Intentamos hacer una petición simple al backend para validar que está OK
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/healthcheck`); 
-        // Suponiendo que tienes una ruta /healthcheck que devuelve 200 OK si el backend está bien
         
         if (!response.ok) {
           throw new Error('Error en la conexión con el backend');
