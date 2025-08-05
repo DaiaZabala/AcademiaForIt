@@ -61,7 +61,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const nombreEvento = ref('')
 const loading = ref(false)
-const API_BASE = import.meta.env.VITE_API_BASE_URL
+const API_BASE = import.meta.env.VITE_BACKEND_URL // ✅ Variable corregida
 
 async function handleSubmit() {
   if (!nombreEvento.value.trim()) {
@@ -95,4 +95,3 @@ async function handleSubmit() {
   }
 }
 </script>
-

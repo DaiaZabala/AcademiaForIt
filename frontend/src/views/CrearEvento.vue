@@ -84,8 +84,6 @@
 </template>
 
 <script>
-const API_BASE = import.meta.env.VITE_BACKEND_URL;
-
 export default {
   name: 'CrearEvento',
   data() {
@@ -100,6 +98,7 @@ export default {
   },
   methods: {
     async crearEvento() {
+      const API_BASE = import.meta.env.VITE_BACKEND_URL || ''; // Por si no está definido
       try {
         const res = await fetch(`${API_BASE}/api/eventos`, {
           method: 'POST',
@@ -110,6 +109,7 @@ export default {
         if (!res.ok) throw new Error('Error al crear el evento');
 
         alert('Evento creado correctamente');
+        // Limpiar formulario
         this.evento = { nombre: '', fecha: '', ubicacion: '', descripcion: '' };
       } catch (error) {
         alert(error.message || 'Error al crear el evento');
@@ -118,4 +118,3 @@ export default {
   },
 };
 </script>
-
