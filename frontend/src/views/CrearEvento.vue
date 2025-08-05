@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     async crearEvento() {
-      const API_BASE = import.meta.env.VITE_BACKEND_URL || ''; // Por si no está definido
+      const API_BASE = import.meta.env.VITE_BACKEND_URL || '';
       try {
         const res = await fetch(`${API_BASE}/api/eventos`, {
           method: 'POST',
