@@ -1,12 +1,9 @@
-import express from "express";
+import express from 'express';
 
 export const router = express.Router();
 
 let invitados = [];
 let nextId = 1;
-
-let eventos = [];
-let nextEventoId = 1;
 
 // GET /api/invitados
 router.get("/", (req, res) => {
