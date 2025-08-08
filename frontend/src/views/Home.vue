@@ -80,9 +80,13 @@ export default {
       this.errorMsg = '';
       this.loading = true;
       try {
-        // Intentamos hacer una petición simple al backend para validar que está OK
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/healthcheck`); 
-        
+      // Eliminamos la barra final de la URL si existe para evitar la doble barra
+      const backendUrl = import.meta.env.VITE_BACKEND_URL.endsWith('/')
+        ? import.meta.env.VITE_BACKEND_URL.slice(0, -1)
+        : import.meta.env.VITE_BACKEND_URL;
+
+      const response = await fetch(`${backendUrl}/healthcheck`); 
+      
         if (!response.ok) {
           throw new Error('Error en la conexión con el backend');
         }
