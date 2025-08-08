@@ -27,7 +27,9 @@
         </li>
         <li v-for="evento in eventos" :key="evento.id" class="list-group-item mb-3">
           <h3>{{ evento.nombre }}</h3>
-          <a href="/login" class="btn btn-dark fw-bold mt-2">Iniciar sesión para agregar invitados</a>
+          <router-link to="/login" class="btn btn-dark fw-bold mt-2">
+            Iniciar sesión para agregar invitados
+          </router-link>
         </li>
       </ul>
     </div>
