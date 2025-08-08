@@ -4,12 +4,13 @@ import cors from 'cors';
 import { router as invitadosRouter } from "../backend/routes.js";
 import eventosRouter from '../backend/eventos.js';
 
-
-
 const app = express();
 const port = 3000;
 
-app.use(cors()); // Permite cualquier origen temporalmente
+// Configura CORS para permitir solicitudes solo desde tu dominio de Vercel
+app.use(cors({
+  origin: 'https://eventdai.vercel.app'
+}));
 
 // Middlewares
 app.use(morgan('dev'));
@@ -17,7 +18,11 @@ app.use(express.json());
 
 // Rutas
 app.use('/api/invitados', invitadosRouter);
-app.use('/api/eventos', eventosRouter);  
+app.use('/api/eventos', eventosRouter); 
+
+app.get('/healthcheck', (req, res) => {
+  res.status(200).send('OK');
+});
 
 app.get('/', (req, res) => {
   res.send('Challenge Academia ForIt');
