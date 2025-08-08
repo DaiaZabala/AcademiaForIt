@@ -58,7 +58,13 @@ router.post('/login', (req, res) => {
     return res.status(404).json({ error: 'Evento no encontrado.' });
   }
 
-  return res.json({ mensaje: 'Login exitoso', evento: eventoEncontrado });
+  return res.json({
+  mensaje: 'Login exitoso',
+  evento: {
+    id: eventoEncontrado.id, // Añade el ID aquí
+    nombre: eventoEncontrado.nombre
+  }
+});
 });
 
 export default router;
