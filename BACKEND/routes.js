@@ -14,7 +14,6 @@ router.get("/", (req, res) => {
     const { eventoId } = req.query;
 
     if (eventoId) {
-      // Filtro por eventoId como string (por si viene como número)
       const invitadosFiltrados = invitados.filter(
         (inv) => String(inv.eventoId) === String(eventoId)
       );
@@ -104,7 +103,6 @@ router.put("/:id", (req, res) => {
   }
 });
 
-// DELETE /api/invitados/:id
 router.delete("/:id", (req, res) => {
   try {
     const { id } = req.params;
@@ -115,7 +113,7 @@ router.delete("/:id", (req, res) => {
       return res.status(404).json({ error: "Invitado no encontrado." });
     }
 
-    const eliminado = invitados.splice(index, 1); // elimina 1 invitado
+    const eliminado = invitados.splice(index, 1);
 
     res.json({
       mensaje: `El invitado con ID ${id} fue eliminado correctamente.`,
@@ -127,7 +125,6 @@ router.delete("/:id", (req, res) => {
   }
 });
 
-// POST /api/invitados/:id/enviar-invitacion
 router.post("/:id/enviar-invitacion", (req, res) => {
   try {
     const { id } = req.params;
@@ -145,10 +142,7 @@ router.post("/:id/enviar-invitacion", (req, res) => {
         });
     }
 
-    // Simulación de envío de correo
     console.log(`🟢 Simulando envío de invitación a: ${invitado.email}`);
-
-    // Aquí podrías integrar tu servicio de email real si quieres
 
     return res.json({ mensaje: "Invitación enviada correctamente" });
   } catch (err) {
@@ -156,4 +150,3 @@ router.post("/:id/enviar-invitacion", (req, res) => {
     res.status(500).json({ error: "Error al enviar la invitación." });
   }
 });
-

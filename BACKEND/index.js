@@ -1,12 +1,18 @@
+<<<<<<< HEAD
 import express from "express";
 import morgan from "morgan";
 import cors from 'cors';
 import { router as invitadosRouter } from "../backend/routes.js";
 import eventosRouter from '../backend/eventos.js';
+=======
+import express from 'express';
+import cors from 'cors'; // Importa cors
+>>>>>>> 792083b6c6595918c6ebc40078f33bccc40de846
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
+<<<<<<< HEAD
 // Configura CORS para permitir solicitudes solo desde tu dominio de Vercel
 app.use(cors({
   origin: 'https://eventdai.vercel.app'
@@ -23,20 +29,20 @@ app.use('/api/eventos', eventosRouter);
 app.get('/healthcheck', (req, res) => {
   res.status(200).send('OK');
 });
+=======
+app.use(cors()); // Usa el middleware de CORS
+>>>>>>> 792083b6c6595918c6ebc40078f33bccc40de846
 
 app.get('/', (req, res) => {
   res.send('Challenge Academia ForIt');
 });
 
-// Middleware de manejo de errores (syntax error JSON)
-app.use((err, req, res, next) => {
-  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
-    console.error('JSON inválido:', err.message);
-    return res.status(400).json({ error: 'Debe ingresar nombre, DNI y status válidos.' });
-  }
-  next(err);
-});
+// ... el resto de tu código
 
 app.listen(port, () => {
+<<<<<<< HEAD
   console.log(`Servidor escuchando en http://localhost:${port}`);
+=======
+  console.log(`Servidor corriendo en el puerto ${port}`);
+>>>>>>> 792083b6c6595918c6ebc40078f33bccc40de846
 });

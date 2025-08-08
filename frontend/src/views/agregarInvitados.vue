@@ -79,7 +79,7 @@
             <button @click="eliminarInvitado(inv.id)" class="btn btn-sm btn-danger">Eliminar</button>
             <button
               v-if="inv.email"
-              @click="enviarInvitacion(inv.id, $event.target)"
+              @click="enviarInvitacion(inv.id)"
               :disabled="inv.enviado"
               :class="['btn btn-sm', inv.enviado ? 'btn-secondary' : 'btn-success']"
             >
@@ -98,9 +98,11 @@ import { useRoute } from "vue-router";
 
 export default {
   setup() {
+    const API_BASE = import.meta.env.VITE_BACKEND_URL || '';
     const route = useRoute();
-    const API = "http://localhost:3000/api/invitados";
     const eventoId = route.query.eventoId;
+
+    const API = `${API_BASE}/api/invitados`;
 
     const invitados = ref([]);
     const idEditando = ref(null);
@@ -113,16 +115,20 @@ export default {
       status: "pendiente",
     });
 
+    // Carga los invitados del backend filtrando por eventoId
     const cargarInvitados = async () => {
       try {
         const res = await fetch(`${API}?eventoId=${eventoId}`);
+        if (!res.ok) throw new Error("Error al obtener invitados");
         const data = await res.json();
+        // Agregamos propiedad enviado para controlar si ya se envió invitación
         invitados.value = data.map((inv) => ({ ...inv, enviado: false }));
       } catch (err) {
         console.error("Error al cargar invitados:", err);
       }
     };
 
+    // Guarda o actualiza un invitado según idEditando
     const guardarInvitado = async () => {
       const nuevo = {
         nombre: form.value.nombre.trim(),
@@ -149,13 +155,14 @@ export default {
         }
         if (!res.ok) throw new Error("Error en la operación");
         resetForm();
-        cargarInvitados();
+        await cargarInvitados();
       } catch (err) {
         alert("Hubo un error al guardar el invitado.");
         console.error(err);
       }
     };
 
+    // Carga invitado al formulario para editar
     const editarInvitado = (inv) => {
       form.value = {
         nombre: inv.nombre,
@@ -166,16 +173,19 @@ export default {
       idEditando.value = inv.id;
     };
 
+    // Elimina invitado
     const eliminarInvitado = async (id) => {
       try {
-        await fetch(`${API}/${id}`, { method: "DELETE" });
-        cargarInvitados();
+        const res = await fetch(`${API}/${id}`, { method: "DELETE" });
+        if (!res.ok) throw new Error("Error al eliminar");
+        await cargarInvitados();
       } catch (err) {
         console.error("Error al eliminar:", err);
       }
     };
 
-    const enviarInvitacion = async (id, boton) => {
+    // Envía invitación, marca enviado si OK
+    const enviarInvitacion = async (id) => {
       try {
         const res = await fetch(`${API}/${id}/enviar-invitacion`, { method: "POST" });
         if (!res.ok) throw new Error();

@@ -44,11 +44,12 @@ export default {
   },
   async created() {
     try {
-      const res = await fetch('http://localhost:3000/api/eventos');
+      const apiBaseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const res = await fetch(`${apiBaseUrl}/api/eventos`);
       if (!res.ok) throw new Error('Error al cargar eventos');
       this.eventos = await res.json();
     } catch (error) {
-      console.error(error);
+      console.error('Error al obtener eventos:', error);
       this.eventos = [];
     }
   },

@@ -98,8 +98,9 @@ export default {
   },
   methods: {
     async crearEvento() {
+      const API_BASE = import.meta.env.VITE_BACKEND_URL || '';
       try {
-        const res = await fetch('http://localhost:3000/api/eventos', {
+        const res = await fetch(`${API_BASE}/api/eventos`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(this.evento),
@@ -108,6 +109,7 @@ export default {
         if (!res.ok) throw new Error('Error al crear el evento');
 
         alert('Evento creado correctamente');
+        // Limpiar formulario
         this.evento = { nombre: '', fecha: '', ubicacion: '', descripcion: '' };
       } catch (error) {
         alert(error.message || 'Error al crear el evento');
