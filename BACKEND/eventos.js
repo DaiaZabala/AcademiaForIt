@@ -8,10 +8,10 @@ let nextEventoId = 1;
 // POST /api/eventos - Crear evento
 router.post('/', (req, res) => {
   try {
-    const { nombre, fecha, ubicacion, descripcion, invitadosMax } = req.body;
+    const { nombre, fecha, ubicacion, descripcion, invitadosMax, contraseña } = req.body;
 
-    if (!nombre || !fecha || !ubicacion) {
-      return res.status(400).json({ error: 'Nombre, fecha y ubicación son obligatorios.' });
+    if (!nombre || !fecha || !ubicacion || !contraseña) {
+      return res.status(400).json({ error: 'Nombre, fecha, ubicación y contraseña son obligatorios.' });
     }
 
     const nuevoEvento = {

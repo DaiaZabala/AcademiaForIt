@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-light py-4">
+  <div class="bg-light d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <router-link to="/" class="navbar-brand d-flex align-items-center">
@@ -19,7 +19,7 @@
       </div>
     </nav>
 
-    <div class="container mt-4">
+    <main class="flex-grow-1 container mt-4">
       <div class="carrusel text-center">
         <h1>Gestor de invitados</h1>
         <h2 class="mt-3 mb-4">Administre sus listas y confirme la asistencia rápidamente</h2>
@@ -32,7 +32,8 @@
         </button>
         <p v-if="errorMsg" class="text-danger mt-3">{{ errorMsg }}</p>
       </div>
-    </div>
+    </main>
+
     <footer class="py-4 mt-5" style="background: linear-gradient(90deg, #8e44ad, #9b59b6); color: white;">
       <div class="container">
         <div class="row text-center text-md-start">
@@ -80,13 +81,13 @@ export default {
       this.errorMsg = '';
       this.loading = true;
       try {
-      // Eliminamos la barra final de la URL si existe para evitar la doble barra
-      const backendUrl = import.meta.env.VITE_BACKEND_URL.endsWith('/')
-        ? import.meta.env.VITE_BACKEND_URL.slice(0, -1)
-        : import.meta.env.VITE_BACKEND_URL;
+        // Eliminamos la barra final de la URL si existe para evitar la doble barra
+        const backendUrl = import.meta.env.VITE_BACKEND_URL.endsWith('/')
+          ? import.meta.env.VITE_BACKEND_URL.slice(0, -1)
+          : import.meta.env.VITE_BACKEND_URL;
 
-      const response = await fetch(`${backendUrl}/healthcheck`); 
-      
+        const response = await fetch(`${backendUrl}/healthcheck`);
+        
         if (!response.ok) {
           throw new Error('Error en la conexión con el backend');
         }
