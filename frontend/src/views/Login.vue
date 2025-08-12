@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <router-link to="/" class="navbar-brand d-flex align-items-center">
-          <img src="/src/assets/img/android-chrome-512x512.png" alt="Logo" width="40" height="40" class="me-2" />
+          <img src="/img/android-chrome-512x512.png" alt="Logo" width="40" height="40" class="me-2" />
         </router-link>
         <div class="navbar-center position-absolute top-50 start-50 translate-middle">
           <span class="fw-bold fs-4 text-black">EventDai</span>

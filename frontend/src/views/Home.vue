@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <router-link to="/" class="navbar-brand d-flex align-items-center">
-          <img src="/src/assets/img/android-chrome-512x512.png" alt="Logo" width="40" height="40" class="me-2" />
+          <img src="/img/android-chrome-512x512.png" alt="Logo" width="40" height="40" class="me-2" />
         </router-link>
         <div class="navbar-center position-absolute top-50 start-50 translate-middle">
           <span class="fw-bold fs-4 text-black">EventDai</span>
@@ -23,8 +23,8 @@
       <div class="carrusel text-center">
         <h1>Gestor de invitados</h1>
         <h2 class="mt-3 mb-4">Administre sus listas y confirme la asistencia rápidamente</h2>
-        <button 
-          class="btn btn-dark fw-bold px-4 py-2 shadow" 
+        <button
+          class="btn btn-dark fw-bold px-4 py-2 shadow"
           @click="empezarGratis"
           :disabled="loading"
         >
@@ -32,6 +32,43 @@
         </button>
         <p v-if="errorMsg" class="text-danger mt-3">{{ errorMsg }}</p>
       </div>
+
+      <hr class="my-5" />
+
+      <section class="container my-5">
+        <h2 class="text-center mb-5 display-6 fw-bold">Descubre las funciones que necesitas para gestionar tus invitaciones con éxito</h2>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="card h-100 p-3 shadow-sm border-0">
+              <div class="card-body text-center">
+                <img src="/img/exam_9528410.png" alt="Crear un evento" width="60" height="60" />
+                <h3 class="card-title mt-4">Crear un evento</h3>
+                <p class="card-text text-muted">Elige una plantilla, personaliza tu tema y define la información práctica de tu evento.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card h-100 p-3 shadow-sm border-0">
+              <div class="card-body text-center">
+                <img src="/img/email_17254724.png" alt="Enviar invitaciones" width="60" height="60" />
+                <h3 class="card-title mt-4">Envíe sus invitaciones</h3>
+                <p class="card-text text-muted">Adapta el texto, importa tus contactos y crea tantos grupos de invitados como quieras.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card h-100 p-3 shadow-sm border-0">
+              <div class="card-body text-center">
+                <img src="/img/consensus_5431538.png" alt="Siga la participación" width="60" height="60" />
+                <h3 class="card-title mt-4">Siga la participación</h3>
+                <p class="card-text text-muted">Consulta en tiempo real quién asistirá a tu evento, haz un seguimiento de tus invitados y ponte en contacto con ellos fácilmente.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="py-4 mt-5" style="background: linear-gradient(90deg, #8e44ad, #9b59b6); color: white;">
@@ -68,6 +105,8 @@
 </template>
 
 <script>
+// Elimina todas las importaciones de imágenes, ya no son necesarias.
+// Tu componente se verá más limpio.
 export default {
   name: 'Home',
   data() {
@@ -81,17 +120,15 @@ export default {
       this.errorMsg = '';
       this.loading = true;
       try {
-        // Eliminamos la barra final de la URL si existe para evitar la doble barra
         const backendUrl = import.meta.env.VITE_BACKEND_URL.endsWith('/')
           ? import.meta.env.VITE_BACKEND_URL.slice(0, -1)
           : import.meta.env.VITE_BACKEND_URL;
 
         const response = await fetch(`${backendUrl}/healthcheck`);
-        
+
         if (!response.ok) {
           throw new Error('Error en la conexión con el backend');
         }
-        // Si todo bien, redirigimos
         this.$router.push('/crear-evento');
       } catch (error) {
         this.errorMsg = 'No se pudo conectar con la base de datos. Por favor, intente más tarde.';
