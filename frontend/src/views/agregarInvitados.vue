@@ -1,9 +1,28 @@
 <template>
   <div class="bg-light">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <router-link to="/" class="navbar-brand d-flex align-items-center">
+          <img src="/img/android-chrome-512x512.png" alt="Logo" width="40" height="40" class="me-2" />
+        </router-link>
+        <div class="navbar-center position-absolute top-50 start-50 translate-middle">
+          <span class="fw-bold fs-4 text-black">EventDai</span>
+        </div>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item"><router-link to="/" class="nav-link">HOME</router-link></li>
+            <li class="nav-item"><router-link to="/crear-evento" class="nav-link">Crear Evento</router-link></li>
+            <li class="nav-item"><router-link to="/login" class="nav-link">Iniciar Sesión</router-link></li>
+            <li class="nav-item"><router-link to="/mis-eventos" class="nav-link">Mis Eventos</router-link></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
     <div class="container mt-5">
       <h2 class="text-center mb-4">Cargar Invitados</h2>
 
-      <div v-if="invitadosMax !== null" class="alert alert-info text-center">
+      <div v-if="invitadosMax" class="alert alert-info text-center">
         Límite de invitados para este evento: <strong>{{ invitadosMax }}</strong>
         <span v-if="invitados.length >= invitadosMax" class="ms-2 badge bg-danger">¡Límite alcanzado!</span>
         <span v-else class="ms-2 badge bg-success">{{ invitadosMax - invitados.length }} restantes</span>
@@ -34,13 +53,49 @@
             {{ idEditando ? 'Actualizar Invitado' : 'Agregar Invitado' }}
           </button>
         </div>
-        
-        <div v-if="invitadosMax !== null && !idEditando && invitados.length >= invitadosMax" class="alert alert-warning mt-3 text-center">
+        <div v-if="!idEditando && invitados.length >= invitadosMax" class="alert alert-warning mt-3 text-center">
           No puedes agregar más invitados. Has alcanzado el límite de {{ invitadosMax }}.
         </div>
       </form>
 
+      <h4 class="mt-5 mb-3">
+        Lista de invitados
+        <span class="badge bg-secondary ms-2">{{ invitadosFiltrados.length }}</span>
+      </h4>
+
+      <div class="btn-group mb-3" role="group">
+        <button class="btn btn-outline-dark" @click="filtro = 'todos'">Todos</button>
+        <button class="btn btn-outline-success" @click="filtro = 'confirmado'">Confirmados</button>
+        <button class="btn btn-outline-warning" @click="filtro = 'pendiente'">Pendientes</button>
+        <button class="btn btn-outline-danger" @click="filtro = 'rechazado'">Rechazados</button>
       </div>
+
+      <ul class="list-group">
+        <li
+          v-for="inv in invitadosFiltrados"
+          :key="inv.id"
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div>
+            <strong>{{ inv.nombre }}</strong> ({{ inv.dni }}) - {{ inv.status }}
+            <br v-if="inv.email" />
+            <small v-if="inv.email">{{ inv.email }}</small>
+          </div>
+          <div class="d-flex gap-2">
+            <button @click="editarInvitado(inv)" class="btn btn-sm btn-primary">Editar</button>
+            <button @click="eliminarInvitado(inv.id)" class="btn btn-sm btn-danger">Eliminar</button>
+            <button
+              v-if="inv.email"
+              @click="enviarInvitacion(inv.id)"
+              :disabled="inv.enviado"
+              :class="['btn btn-sm', inv.enviado ? 'btn-secondary' : 'btn-success']"
+            >
+              {{ inv.enviado ? 'Invitación enviada' : 'Enviar invitación' }}
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -55,10 +110,10 @@ export default {
     const eventoId = route.query.eventoId;
 
     const API_INVITADOS = `${API_BASE}/api/invitados`;
-    const API_EVENTOS = `${API_BASE}/api/eventos`;
+    const API_EVENTOS = `${API_BASE}/api/eventos`; // Nueva API para obtener datos del evento
 
     const invitados = ref([]);
-    const invitadosMax = ref(null); // Valor inicial null
+    const invitadosMax = ref(null); // Variable para el límite de invitados
     const idEditando = ref(null);
     const filtro = ref("todos");
 
@@ -81,6 +136,7 @@ export default {
       }
     };
 
+    // Carga los invitados del backend
     const cargarInvitados = async () => {
       try {
         const res = await fetch(`${API_INVITADOS}?eventoId=${eventoId}`);
@@ -92,14 +148,14 @@ export default {
       }
     };
 
+    // Guarda o actualiza un invitado. Se ha agregado la lógica para validar el límite.
     const guardarInvitado = async () => {
-      // La validación se mantiene igual, pero ahora invitadosMax tendrá un valor
+      // Si no estás editando y ya se alcanzó el límite, muestra una alerta y detiene la función.
       if (!idEditando.value && invitados.value.length >= invitadosMax.value) {
         alert('Has alcanzado el límite máximo de invitados para este evento.');
         return;
       }
-      
-      // ... (el resto de la función guardarInvitado) ...
+
       const nuevo = {
         nombre: form.value.nombre.trim(),
         dni: form.value.dni.trim(),
@@ -132,6 +188,7 @@ export default {
       }
     };
 
+    // Carga invitado al formulario para editar
     const editarInvitado = (inv) => {
       form.value = {
         nombre: inv.nombre,
@@ -142,6 +199,7 @@ export default {
       idEditando.value = inv.id;
     };
 
+    // Elimina invitado
     const eliminarInvitado = async (id) => {
       try {
         const res = await fetch(`${API_INVITADOS}/${id}`, { method: "DELETE" });
@@ -152,6 +210,7 @@ export default {
       }
     };
 
+    // Envía invitación, marca enviado si OK
     const enviarInvitacion = async (id) => {
       try {
         const res = await fetch(`${API_INVITADOS}/${id}/enviar-invitacion`, { method: "POST" });
@@ -180,12 +239,12 @@ export default {
 
     onMounted(() => {
       cargarInvitados();
-      cargarDatosEvento();
+      cargarDatosEvento(); // Llama a la nueva función para cargar el límite
     });
 
     return {
       invitados,
-      invitadosMax,
+      invitadosMax, // Exponemos la variable al template
       invitadosFiltrados,
       form,
       idEditando,
