@@ -29,7 +29,6 @@
         </div>
       </div>
     </nav>
-
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
       <div class="card p-4 shadow-sm" style="max-width: 400px; width: 100%;">
         <h3 class="mb-4 text-center">Iniciar Sesión</h3>
@@ -42,6 +41,17 @@
               class="form-control"
               id="nombreEvento"
               placeholder="Ingrese el nombre del evento"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input
+              v-model="password"
+              type="password"
+              class="form-control"
+              id="password"
+              placeholder="Ingrese su contraseña"
               required
             />
           </div>
@@ -60,12 +70,13 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const nombreEvento = ref('')
+const password = ref('') // ✅ Nuevo ref para la contraseña
 const loading = ref(false)
-const API_BASE = import.meta.env.VITE_BACKEND_URL // ✅ Variable corregida
+const API_BASE = import.meta.env.VITE_BACKEND_URL
 
 async function handleSubmit() {
-  if (!nombreEvento.value.trim()) {
-    alert('Por favor, ingresa el nombre del evento.')
+  if (!nombreEvento.value.trim() || !password.value.trim()) {
+    alert('Por favor, ingrese el nombre del evento y la contraseña.')
     return
   }
 
@@ -74,7 +85,10 @@ async function handleSubmit() {
     const res = await fetch(`${API_BASE}/api/eventos/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nombreEvento: nombreEvento.value.trim() }),
+      body: JSON.stringify({
+        nombreEvento: nombreEvento.value.trim(),
+        password: password.value.trim() // ✅ Se envía la contraseña
+      }),
     })
 
     const data = await res.json()
@@ -85,10 +99,9 @@ async function handleSubmit() {
     }
 
     localStorage.setItem('eventoLogueado', JSON.stringify(data.evento))
-
     router.push({ name: 'AgregarInvitados', query: { eventoId: data.evento.id } })
   } catch (error) {
-    console.error(error)
+    console.error('Error de conexión:', error)
     alert('Error de conexión con el servidor')
   } finally {
     loading.value = false
