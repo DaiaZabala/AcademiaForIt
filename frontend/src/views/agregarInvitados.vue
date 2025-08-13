@@ -22,6 +22,12 @@
     <div class="container mt-5">
       <h2 class="text-center mb-4">Cargar Invitados</h2>
 
+      <div v-if="invitadosMax" class="alert alert-info text-center">
+        Límite de invitados para este evento: <strong>{{ invitadosMax }}</strong>
+        <span v-if="invitados.length >= invitadosMax" class="ms-2 badge bg-danger">¡Límite alcanzado!</span>
+        <span v-else class="ms-2 badge bg-success">{{ invitadosMax - invitados.length }} restantes</span>
+      </div>
+
       <form @submit.prevent="guardarInvitado" class="border p-4 rounded bg-white shadow-sm">
         <div class="row g-3">
           <div class="col-md-4">
@@ -43,9 +49,12 @@
         </div>
         <br />
         <div class="d-grid">
-          <button type="submit" class="btn btn-dark fw-bold">
+          <button type="submit" class="btn btn-dark fw-bold" :disabled="!idEditando && invitados.length >= invitadosMax">
             {{ idEditando ? 'Actualizar Invitado' : 'Agregar Invitado' }}
           </button>
+        </div>
+        <div v-if="!idEditando && invitados.length >= invitadosMax" class="alert alert-warning mt-3 text-center">
+          No puedes agregar más invitados. Has alcanzado el límite de {{ invitadosMax }}.
         </div>
       </form>
 
@@ -54,7 +63,6 @@
         <span class="badge bg-secondary ms-2">{{ invitadosFiltrados.length }}</span>
       </h4>
 
-      <!-- Filtros -->
       <div class="btn-group mb-3" role="group">
         <button class="btn btn-outline-dark" @click="filtro = 'todos'">Todos</button>
         <button class="btn btn-outline-success" @click="filtro = 'confirmado'">Confirmados</button>
@@ -62,7 +70,6 @@
         <button class="btn btn-outline-danger" @click="filtro = 'rechazado'">Rechazados</button>
       </div>
 
-      <!-- Lista -->
       <ul class="list-group">
         <li
           v-for="inv in invitadosFiltrados"
@@ -102,9 +109,11 @@ export default {
     const route = useRoute();
     const eventoId = route.query.eventoId;
 
-    const API = `${API_BASE}/api/invitados`;
+    const API_INVITADOS = `${API_BASE}/api/invitados`;
+    const API_EVENTOS = `${API_BASE}/api/eventos`; // Nueva API para obtener datos del evento
 
     const invitados = ref([]);
+    const invitadosMax = ref(null); // Variable para el límite de invitados
     const idEditando = ref(null);
     const filtro = ref("todos");
 
@@ -115,21 +124,38 @@ export default {
       status: "pendiente",
     });
 
-    // Carga los invitados del backend filtrando por eventoId
+    // Carga los datos del evento, incluido el límite de invitados
+    const cargarDatosEvento = async () => {
+      try {
+        const res = await fetch(`${API_EVENTOS}/${eventoId}`);
+        if (!res.ok) throw new Error("Error al obtener datos del evento");
+        const data = await res.json();
+        invitadosMax.value = data.invitadosMax;
+      } catch (err) {
+        console.error("Error al cargar datos del evento:", err);
+      }
+    };
+
+    // Carga los invitados del backend
     const cargarInvitados = async () => {
       try {
-        const res = await fetch(`${API}?eventoId=${eventoId}`);
+        const res = await fetch(`${API_INVITADOS}?eventoId=${eventoId}`);
         if (!res.ok) throw new Error("Error al obtener invitados");
         const data = await res.json();
-        // Agregamos propiedad enviado para controlar si ya se envió invitación
         invitados.value = data.map((inv) => ({ ...inv, enviado: false }));
       } catch (err) {
         console.error("Error al cargar invitados:", err);
       }
     };
 
-    // Guarda o actualiza un invitado según idEditando
+    // Guarda o actualiza un invitado. Se ha agregado la lógica para validar el límite.
     const guardarInvitado = async () => {
+      // Si no estás editando y ya se alcanzó el límite, muestra una alerta y detiene la función.
+      if (!idEditando.value && invitados.value.length >= invitadosMax.value) {
+        alert('Has alcanzado el límite máximo de invitados para este evento.');
+        return;
+      }
+
       const nuevo = {
         nombre: form.value.nombre.trim(),
         dni: form.value.dni.trim(),
@@ -141,13 +167,13 @@ export default {
       try {
         let res;
         if (idEditando.value) {
-          res = await fetch(`${API}/${idEditando.value}`, {
+          res = await fetch(`${API_INVITADOS}/${idEditando.value}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(nuevo),
           });
         } else {
-          res = await fetch(API, {
+          res = await fetch(API_INVITADOS, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(nuevo),
@@ -176,7 +202,7 @@ export default {
     // Elimina invitado
     const eliminarInvitado = async (id) => {
       try {
-        const res = await fetch(`${API}/${id}`, { method: "DELETE" });
+        const res = await fetch(`${API_INVITADOS}/${id}`, { method: "DELETE" });
         if (!res.ok) throw new Error("Error al eliminar");
         await cargarInvitados();
       } catch (err) {
@@ -187,7 +213,7 @@ export default {
     // Envía invitación, marca enviado si OK
     const enviarInvitacion = async (id) => {
       try {
-        const res = await fetch(`${API}/${id}/enviar-invitacion`, { method: "POST" });
+        const res = await fetch(`${API_INVITADOS}/${id}/enviar-invitacion`, { method: "POST" });
         if (!res.ok) throw new Error();
         const inv = invitados.value.find((i) => i.id === id);
         if (inv) inv.enviado = true;
@@ -213,10 +239,12 @@ export default {
 
     onMounted(() => {
       cargarInvitados();
+      cargarDatosEvento(); // Llama a la nueva función para cargar el límite
     });
 
     return {
       invitados,
+      invitadosMax, // Exponemos la variable al template
       invitadosFiltrados,
       form,
       idEditando,
