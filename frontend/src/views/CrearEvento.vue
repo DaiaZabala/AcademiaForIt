@@ -44,6 +44,16 @@
           <textarea v-model="evento.descripcion" id="descripcion" rows="3" class="form-control"></textarea>
         </div>
 
+        <div class="mb-3">
+          <label class="form-label fw-semibold" for="contraseña">Contraseña del evento</label>
+          <input v-model="evento.contraseña" id="contraseña" type="password" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold" for="invitadosMax">Máximo de invitados</label>
+          <input v-model="evento.invitadosMax" id="invitadosMax" type="number" class="form-control" />
+        </div>
+
         <div class="d-grid">
           <button type="submit" class="btn btn-dark fw-bold">Guardar Evento</button>
         </div>
@@ -93,6 +103,8 @@ export default {
         fecha: '',
         ubicacion: '',
         descripcion: '',
+        contraseña: '', // Se ha agregado el campo de contraseña
+        invitadosMax: null, // Se ha agregado el campo para el máximo de invitados
       },
     };
   },
@@ -110,7 +122,7 @@ export default {
 
         alert('Evento creado correctamente');
         // Limpiar formulario
-        this.evento = { nombre: '', fecha: '', ubicacion: '', descripcion: '' };
+        this.evento = { nombre: '', fecha: '', ubicacion: '', descripcion: '', contraseña: '', invitadosMax: null }; // Se limpian los nuevos campos
       } catch (error) {
         alert(error.message || 'Error al crear el evento');
       }

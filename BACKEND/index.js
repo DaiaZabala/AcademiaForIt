@@ -5,11 +5,18 @@ import { router as invitadosRouter } from "../BACKEND/routes.js";
 import eventosRouter from '../BACKEND/eventos.js';
 
 const app = express();
-const port = 3000;
+// Usa el puerto de la variable de entorno (para Vercel) o el 3000 (para desarrollo local)
+const port = process.env.PORT || 5173;
 
-// Configura CORS para permitir solicitudes solo desde tu dominio de Vercel
+// Configura CORS de forma condicional para desarrollo y producción.
+// En producción (Vercel), permite solo el origen de Vercel.
+// En desarrollo, permite cualquier origen para evitar problemas con los puertos locales.
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? 'https://eventdai.vercel.app'
+  : '*'; // Permite cualquier origen en desarrollo
+
 app.use(cors({
-  origin: 'https://eventdai.vercel.app'
+  origin: allowedOrigins
 }));
 
 // Middlewares
