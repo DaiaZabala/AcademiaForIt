@@ -46,7 +46,8 @@ export default {
   },
   async created() {
     try {
-      const apiBaseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+    
+      const apiBaseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5173';
       const res = await fetch(`${apiBaseUrl}/api/eventos`);
       if (!res.ok) throw new Error('Error al cargar eventos');
       this.eventos = await res.json();
