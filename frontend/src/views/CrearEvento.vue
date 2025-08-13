@@ -103,8 +103,8 @@ export default {
         fecha: '',
         ubicacion: '',
         descripcion: '',
-        contraseña: '', // Se ha agregado el campo de contraseña
-        invitadosMax: null, // Se ha agregado el campo para el máximo de invitados
+        contraseña: '', 
+        invitadosMax: null, 
       },
     };
   },
