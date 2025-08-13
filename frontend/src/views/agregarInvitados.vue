@@ -22,7 +22,7 @@
     <div class="container mt-5">
       <h2 class="text-center mb-4">Cargar Invitados</h2>
 
-      <div v-if="invitadosMax" class="alert alert-info text-center">
+      <div v-if="invitadosMax !== null" class="alert alert-info text-center">
         Límite de invitados para este evento: <strong>{{ invitadosMax }}</strong>
         <span v-if="invitados.length >= invitadosMax" class="ms-2 badge bg-danger">¡Límite alcanzado!</span>
         <span v-else class="ms-2 badge bg-success">{{ invitadosMax - invitados.length }} restantes</span>
@@ -49,11 +49,11 @@
         </div>
         <br />
         <div class="d-grid">
-          <button type="submit" class="btn btn-dark fw-bold" :disabled="!idEditando && invitados.length >= invitadosMax">
+          <button type="submit" class="btn btn-dark fw-bold" :disabled="!idEditando && invitadosMax !== null && invitados.length >= invitadosMax">
             {{ idEditando ? 'Actualizar Invitado' : 'Agregar Invitado' }}
           </button>
         </div>
-        <div v-if="!idEditando && invitados.length >= invitadosMax" class="alert alert-warning mt-3 text-center">
+        <div v-if="!idEditando && invitadosMax !== null && invitados.length >= invitadosMax" class="alert alert-warning mt-3 text-center">
           No puedes agregar más invitados. Has alcanzado el límite de {{ invitadosMax }}.
         </div>
       </form>
@@ -110,10 +110,10 @@ export default {
     const eventoId = route.query.eventoId;
 
     const API_INVITADOS = `${API_BASE}/api/invitados`;
-    const API_EVENTOS = `${API_BASE}/api/eventos`; // Nueva API para obtener datos del evento
+    const API_EVENTOS = `${API_BASE}/api/eventos`;
 
     const invitados = ref([]);
-    const invitadosMax = ref(null); // Variable para el límite de invitados
+    const invitadosMax = ref(null);
     const idEditando = ref(null);
     const filtro = ref("todos");
 
@@ -124,7 +124,6 @@ export default {
       status: "pendiente",
     });
 
-    // Carga los datos del evento, incluido el límite de invitados
     const cargarDatosEvento = async () => {
       try {
         const res = await fetch(`${API_EVENTOS}/${eventoId}`);
@@ -136,7 +135,6 @@ export default {
       }
     };
 
-    // Carga los invitados del backend
     const cargarInvitados = async () => {
       try {
         const res = await fetch(`${API_INVITADOS}?eventoId=${eventoId}`);
@@ -148,10 +146,9 @@ export default {
       }
     };
 
-    // Guarda o actualiza un invitado. Se ha agregado la lógica para validar el límite.
     const guardarInvitado = async () => {
-      // Si no estás editando y ya se alcanzó el límite, muestra una alerta y detiene la función.
-      if (!idEditando.value && invitados.value.length >= invitadosMax.value) {
+      // Nueva validación: Asegúrate de que `invitadosMax` no sea null.
+      if (!idEditando.value && invitadosMax.value !== null && invitados.value.length >= invitadosMax.value) {
         alert('Has alcanzado el límite máximo de invitados para este evento.');
         return;
       }
@@ -188,7 +185,6 @@ export default {
       }
     };
 
-    // Carga invitado al formulario para editar
     const editarInvitado = (inv) => {
       form.value = {
         nombre: inv.nombre,
@@ -199,7 +195,6 @@ export default {
       idEditando.value = inv.id;
     };
 
-    // Elimina invitado
     const eliminarInvitado = async (id) => {
       try {
         const res = await fetch(`${API_INVITADOS}/${id}`, { method: "DELETE" });
@@ -210,7 +205,6 @@ export default {
       }
     };
 
-    // Envía invitación, marca enviado si OK
     const enviarInvitacion = async (id) => {
       try {
         const res = await fetch(`${API_INVITADOS}/${id}/enviar-invitacion`, { method: "POST" });
@@ -239,12 +233,12 @@ export default {
 
     onMounted(() => {
       cargarInvitados();
-      cargarDatosEvento(); // Llama a la nueva función para cargar el límite
+      cargarDatosEvento();
     });
 
     return {
       invitados,
-      invitadosMax, // Exponemos la variable al template
+      invitadosMax,
       invitadosFiltrados,
       form,
       idEditando,
