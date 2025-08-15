@@ -111,6 +111,7 @@ export default {
   methods: {
     async crearEvento() {
       const API_BASE = import.meta.env.VITE_BACKEND_URL || '';
+        console.log("Usando API_BASE:", API_BASE);
       try {
         const res = await fetch(`${API_BASE}/api/eventos`, {
           method: 'POST',

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-light">
+  <div class="bg-light min-h-screen">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <router-link to="/" class="navbar-brand d-flex align-items-center">
@@ -22,6 +22,7 @@
     <div class="container mt-5">
       <h2 class="text-center mb-4">Cargar Invitados</h2>
 
+      <!-- Indicador visual del límite de invitados -->
       <div v-if="invitadosMax !== null" class="alert alert-info text-center">
         Límite de invitados para este evento: <strong>{{ invitadosMax }}</strong>
         <span v-if="invitados.length >= invitadosMax" class="ms-2 badge bg-danger">¡Límite alcanzado!</span>
@@ -49,10 +50,15 @@
         </div>
         <br />
         <div class="d-grid">
-          <button type="submit" class="btn btn-dark fw-bold" :disabled="!idEditando && invitadosMax !== null && invitados.length >= invitadosMax">
+          <button
+            type="submit"
+            class="btn btn-dark fw-bold"
+            :disabled="!idEditando && invitadosMax !== null && invitados.length >= invitadosMax"
+          >
             {{ idEditando ? 'Actualizar Invitado' : 'Agregar Invitado' }}
           </button>
         </div>
+        <!-- Mensaje de advertencia para el usuario -->
         <div v-if="!idEditando && invitadosMax !== null && invitados.length >= invitadosMax" class="alert alert-warning mt-3 text-center">
           No puedes agregar más invitados. Has alcanzado el límite de {{ invitadosMax }}.
         </div>
@@ -147,9 +153,12 @@ export default {
     };
 
     const guardarInvitado = async () => {
-      // Nueva validación: Asegúrate de que `invitadosMax` no sea null.
+      // Nueva validación: si el formulario no está en modo edición y se ha alcanzado el límite,
+      // se detiene la ejecución.
       if (!idEditando.value && invitadosMax.value !== null && invitados.value.length >= invitadosMax.value) {
-        alert('Has alcanzado el límite máximo de invitados para este evento.');
+        // En lugar de una alerta, ahora tenemos un mensaje de advertencia en el template,
+        // pero podemos mantener esta alerta para una retroalimentación adicional.
+        console.warn('Límite de invitados alcanzado, no se puede agregar más.');
         return;
       }
 
@@ -178,6 +187,7 @@ export default {
         }
         if (!res.ok) throw new Error("Error en la operación");
         resetForm();
+        // Recargamos los invitados después de guardar para actualizar el conteo.
         await cargarInvitados();
       } catch (err) {
         alert("Hubo un error al guardar el invitado.");

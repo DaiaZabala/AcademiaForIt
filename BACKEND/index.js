@@ -1,12 +1,14 @@
 import express from "express";
 import morgan from "morgan";
 import cors from 'cors';
-import { router as invitadosRouter } from "../BACKEND/routes.js";
-import eventosRouter from '../BACKEND/eventos.js';
+import { router as invitadosRouter } from "../backend/routes.js";
+import eventosRouter from '../backend/eventos.js';
 
 const app = express();
 // Usa el puerto de la variable de entorno (para Vercel) o el 3000 (para desarrollo local)
-const port = process.env.PORT || 5173;
+//const port = process.env.PORT || 5173;
+// server.js o index.js
+const port = process.env.PORT || 5000;
 
 // Configura CORS de forma condicional para desarrollo y producción.
 // En producción (Vercel), permite solo el origen de Vercel.

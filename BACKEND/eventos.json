@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "nombre": "daiana",
+    "fecha": "2026-03-13T00:00:00.000Z",
+    "ubicacion": "Makena",
+    "descripcion": "",
+    "invitadosMax": 3,
+    "contraseña": "$2b$10$ROtYK7QhPNTHaYrLBmTYfOy/2T9NZK/omin0S5fM3NzhxmY.lrxdm",
+    "creadoEn": "2025-08-15T01:44:20.010Z"
+  },
+  {
+    "id": "2",
+    "nombre": "justi",
+    "fecha": "2025-05-16T00:00:00.000Z",
+    "ubicacion": "En mi casa",
+    "descripcion": "",
+    "invitadosMax": 2,
+    "contraseña": "$2b$10$Uka9RfhwC0M/5qqctP.LoOOKx4dS2V/wbIkK6m/.01j0xReamEqpS",
+    "creadoEn": "2025-08-15T01:48:22.525Z"
+  }
+]

@@ -65,46 +65,46 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-const router = useRouter()
-const nombreEvento = ref('')
-const password = ref('') // ✅ Nuevo ref para la contraseña
-const loading = ref(false)
-const API_BASE = import.meta.env.VITE_BACKEND_URL
+const router = useRouter();
+const nombreEvento = ref('');
+const password = ref('');
+const loading = ref(false);
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 async function handleSubmit() {
   if (!nombreEvento.value.trim() || !password.value.trim()) {
-    alert('Por favor, ingrese el nombre del evento y la contraseña.')
-    return
+    alert('Por favor, ingrese el nombre del evento y la contraseña.');
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
   try {
     const res = await fetch(`${API_BASE}/api/eventos/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         nombreEvento: nombreEvento.value.trim(),
-        password: password.value.trim() // ✅ Se envía la contraseña
+        password: password.value.trim()
       }),
-    })
+    });
 
-    const data = await res.json()
+    const data = await res.json();
 
     if (!res.ok) {
-      alert(data.error || 'Error al iniciar sesión')
-      return
+      alert(data.error || 'Error al iniciar sesión');
+      return;
     }
 
-    localStorage.setItem('eventoLogueado', JSON.stringify(data.evento))
-    router.push({ name: 'AgregarInvitados', query: { eventoId: data.evento.id } })
+    localStorage.setItem('eventoLogueado', JSON.stringify(data.evento));
+    router.push({ name: 'AgregarInvitados', query: { eventoId: data.evento.id } });
   } catch (error) {
-    console.error('Error de conexión:', error)
-    alert('Error de conexión con el servidor')
+    console.error('Error de conexión:', error);
+    alert('Error de conexión con el servidor');
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 </script>
