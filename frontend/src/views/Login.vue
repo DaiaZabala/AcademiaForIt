@@ -4,22 +4,19 @@
       <div class="container-fluid">
         <router-link to="/" class="navbar-brand d-flex align-items-center">
           <img src="/img/android-chrome-512x512.png" alt="Logo" width="40" height="40" class="me-2" />
-        </router-link>
-        <div class="navbar-center position-absolute top-50 start-50 translate-middle">
           <span class="fw-bold fs-4 text-black">EventDai</span>
-        </div>
+        </router-link>
+
         <button
           class="navbar-toggler"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
+          @click="toggleMenu"
           aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
+        <div :class="['collapse', 'navbar-collapse', 'justify-content-end', { 'show': isMenuOpen }]" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item"><router-link to="/" class="nav-link">HOME</router-link></li>
             <li class="nav-item"><router-link to="/crear-evento" class="nav-link">Crear Evento</router-link></li>
@@ -73,6 +70,12 @@ const nombreEvento = ref('');
 const password = ref('');
 const loading = ref(false);
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
+const isMenuOpen = ref(false); // <-- Nuevo estado para el menú
+
+// Nuevo método para abrir y cerrar el menú
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value;
+};
 
 async function handleSubmit() {
   if (!nombreEvento.value.trim() || !password.value.trim()) {
@@ -108,3 +111,15 @@ async function handleSubmit() {
   }
 }
 </script>
+
+<style scoped>
+/* Estilos para el menú desplegable en móviles */
+.navbar-collapse.show {
+  /* Añade un fondo ligeramente gris para que resalte */
+  background-color: #f8f9fa; 
+  /* Agrega una sombra sutil */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  /* Opcional: añade un poco de padding para que se vea mejor */
+  padding: 1rem; 
+}
+</style>

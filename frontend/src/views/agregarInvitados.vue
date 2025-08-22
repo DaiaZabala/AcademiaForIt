@@ -4,11 +4,19 @@
       <div class="container-fluid">
         <router-link to="/" class="navbar-brand d-flex align-items-center">
           <img src="/img/android-chrome-512x512.png" alt="Logo" width="40" height="40" class="me-2" />
-        </router-link>
-        <div class="navbar-center position-absolute top-50 start-50 translate-middle">
           <span class="fw-bold fs-4 text-black">EventDai</span>
-        </div>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        </router-link>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          @click="toggleMenu"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div :class="['collapse', 'navbar-collapse', 'justify-content-end', { 'show': isMenuOpen }]" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item"><router-link to="/" class="nav-link">HOME</router-link></li>
             <li class="nav-item"><router-link to="/crear-evento" class="nav-link">Crear Evento</router-link></li>
@@ -22,7 +30,6 @@
     <div class="container mt-5">
       <h2 class="text-center mb-4">Cargar Invitados</h2>
 
-      <!-- Indicador visual del límite de invitados -->
       <div v-if="invitadosMax !== null" class="alert alert-info text-center">
         Límite de invitados para este evento: <strong>{{ invitadosMax }}</strong>
         <span v-if="invitados.length >= invitadosMax" class="ms-2 badge bg-danger">¡Límite alcanzado!</span>
@@ -58,7 +65,6 @@
             {{ idEditando ? 'Actualizar Invitado' : 'Agregar Invitado' }}
           </button>
         </div>
-        <!-- Mensaje de advertencia para el usuario -->
         <div v-if="!idEditando && invitadosMax !== null && invitados.length >= invitadosMax" class="alert alert-warning mt-3 text-center">
           No puedes agregar más invitados. Has alcanzado el límite de {{ invitadosMax }}.
         </div>
@@ -122,6 +128,7 @@ export default {
     const invitadosMax = ref(null);
     const idEditando = ref(null);
     const filtro = ref("todos");
+    const isMenuOpen = ref(false); // <-- Nuevo estado para el menú
 
     const form = ref({
       nombre: "",
@@ -129,6 +136,11 @@ export default {
       email: "",
       status: "pendiente",
     });
+
+    // Nuevo método para abrir y cerrar el menú
+    const toggleMenu = () => {
+      isMenuOpen.value = !isMenuOpen.value;
+    };
 
     const cargarDatosEvento = async () => {
       try {
@@ -257,7 +269,21 @@ export default {
       editarInvitado,
       eliminarInvitado,
       enviarInvitacion,
+      toggleMenu, // <-- Exportamos el método
+      isMenuOpen, // <-- Exportamos el estado
     };
   },
 };
 </script>
+
+<style scoped>
+/* Estilos para el menú desplegable en móviles */
+.navbar-collapse.show {
+  /* Añade un fondo ligeramente gris para que resalte */
+  background-color: #f8f9fa; 
+  /* Agrega una sombra sutil */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  /* Opcional: añade un poco de padding para que se vea mejor */
+  padding: 1rem; 
+}
+</style>

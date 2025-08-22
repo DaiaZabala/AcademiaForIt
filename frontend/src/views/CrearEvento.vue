@@ -4,11 +4,19 @@
       <div class="container-fluid">
         <router-link to="/" class="navbar-brand d-flex align-items-center">
           <img src="/img/android-chrome-512x512.png" alt="Logo" width="40" height="40" class="me-2" />
-        </router-link>
-        <div class="navbar-center position-absolute top-50 start-50 translate-middle">
           <span class="fw-bold fs-4 text-black">EventDai</span>
-        </div>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        </router-link>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          @click="toggleMenu"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div :class="['collapse', 'navbar-collapse', 'justify-content-end', { 'show': isMenuOpen }]" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item"><router-link to="/" class="nav-link">HOME</router-link></li>
             <li class="nav-item"><router-link to="/crear-evento" class="nav-link active">Crear Evento</router-link></li>
@@ -106,9 +114,14 @@ export default {
         contraseña: '', 
         invitadosMax: null, 
       },
+      isMenuOpen: false, // <-- Nuevo estado para el menú
     };
   },
   methods: {
+    // Nuevo método para abrir y cerrar el menú
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    },
     async crearEvento() {
       const API_BASE = import.meta.env.VITE_BACKEND_URL || '';
         console.log("Usando API_BASE:", API_BASE);
@@ -131,3 +144,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* Estilos para el menú desplegable en móviles */
+.navbar-collapse.show {
+  /* Añade un fondo ligeramente gris para que resalte */
+  background-color: #f8f9fa; 
+  /* Agrega una sombra sutil */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  /* Opcional: añade un poco de padding para que se vea mejor */
+  padding: 1rem; 
+}
+</style>
