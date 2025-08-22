@@ -28,5 +28,25 @@
     "invitadosMax": 5,
     "contraseña": "$2b$10$nHvEpVKSr5.SUB7nkN3NEOtyHy8UOSS9/4rZQM/ap8HUMHtR2z6ya",
     "creadoEn": "2025-08-22T19:24:22.094Z"
+  },
+  {
+    "id": "4",
+    "nombre": "daiana",
+    "fecha": "1995-03-13T00:00:00.000Z",
+    "ubicacion": "En mi casa",
+    "descripcion": "",
+    "invitadosMax": 5,
+    "contraseña": "$2b$10$CBnvHi/HTVzbkgkMmS3Nvuwgu08DNspIJMduEerwgt1Jgjf.6D3yK",
+    "creadoEn": "2025-08-22T21:22:02.076Z"
+  },
+  {
+    "id": "5",
+    "nombre": "justi1",
+    "fecha": "1995-03-13T00:00:00.000Z",
+    "ubicacion": "En mi casa",
+    "descripcion": "",
+    "invitadosMax": 3,
+    "contraseña": "$2b$10$L.mtD7abbATx6l798CHp5.bYAu7hSjX4QQxmW9vA5MoA47GBZVfBO",
+    "creadoEn": "2025-08-22T21:23:12.602Z"
   }
 ]
