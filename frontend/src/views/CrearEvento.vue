@@ -135,7 +135,6 @@ export default {
         if (!res.ok) throw new Error('Error al crear el evento');
 
         alert('Evento creado correctamente');
-        // Limpiar formulario
         this.evento = { nombre: '', fecha: '', ubicacion: '', descripcion: '', contraseña: '', invitadosMax: null }; // Se limpian los nuevos campos
       } catch (error) {
         alert(error.message || 'Error al crear el evento');
@@ -146,13 +145,9 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos para el menú desplegable en móviles */
 .navbar-collapse.show {
-  /* Añade un fondo ligeramente gris para que resalte */
   background-color: #f8f9fa; 
-  /* Agrega una sombra sutil */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-  /* Opcional: añade un poco de padding para que se vea mejor */
   padding: 1rem; 
 }
 </style>
