@@ -42,7 +42,6 @@
       </div>
 
       <hr class="my-5" />
-
       <section class="container my-5">
         <h2 class="text-center mb-5 display-6 fw-bold">Descubre las funciones que necesitas para gestionar tus invitaciones con éxito</h2>
         <div class="row g-4">
