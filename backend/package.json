@@ -4,10 +4,9 @@
   "description": "Servidor Express con ES Modules",
   "type": "module",
   "main": "index.js",
-  "scripts": {
-  "start": "node backend/index.js"
-  },
-
+ "scripts": {
+  "start": "node index.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
