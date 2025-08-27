@@ -35,9 +35,14 @@
         </li>
         <li v-for="evento in eventos" :key="evento.id" class="list-group-item mb-3">
           <h3>{{ evento.nombre }}</h3>
-          <router-link to="/login" class="btn btn-dark fw-bold mt-2">
-            Iniciar sesión para agregar invitados
-          </router-link>
+          <div class="d-flex gap-2 mt-2">
+            <router-link to="/login" class="btn btn-dark fw-bold">
+              Iniciar sesión para agregar invitados
+            </router-link>
+            <button class="btn btn-danger fw-bold" @click="eliminarEvento(evento.id)">
+              Eliminar
+            </button>
+          </div>
         </li>
       </ul>
     </div>
@@ -50,14 +55,43 @@ export default {
   data() {
     return {
       eventos: [],
-      isMenuOpen: false, // <-- Nuevo estado para el menú
+      isMenuOpen: false,
     };
   },
   methods: {
-    // Nuevo método para abrir y cerrar el menú
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
     },
+    async eliminarEvento(id) {
+      // Paso 1: Confirmación de eliminación
+      if (!confirm("¿Seguro que deseas eliminar este evento?")) return;
+
+      // Paso 2: Pedir contraseña del evento
+      const password = prompt("Ingresá la contraseña del evento para eliminarlo:");
+      if (!password) return alert("Debés ingresar la contraseña.");
+
+      try {
+        const apiBaseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5173';
+        const res = await fetch(`${apiBaseUrl}/api/eventos/${id}`, {
+          method: "DELETE",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }) // enviamos la contraseña al backend
+        });
+
+        const data = await res.json();
+
+        // Validación de respuesta
+        if (!res.ok) throw new Error(data.error || "Error al eliminar evento");
+
+        // Filtramos la lista para que desaparezca del frontend
+        this.eventos = this.eventos.filter(evento => evento.id !== id);
+
+        alert(data.mensaje); // mostramos mensaje de éxito
+      } catch (error) {
+        console.error("Error al eliminar evento:", error);
+        alert(error.message || "No se pudo eliminar el evento");
+      }
+    }
   },
   async created() {
     try {
