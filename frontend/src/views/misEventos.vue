@@ -44,8 +44,8 @@ export default {
   },
   async created() {
     try {
-      const apiBaseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      const res = await fetch(`${apiBaseUrl}/api/eventos`);
+      // Usamos solo el path relativo para aprovechar el proxy de Vite
+      const res = await fetch('/api/eventos');
       if (!res.ok) throw new Error('Error al cargar eventos');
       this.eventos = await res.json();
     } catch (error) {

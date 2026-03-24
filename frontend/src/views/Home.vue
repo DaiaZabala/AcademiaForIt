@@ -80,13 +80,11 @@ export default {
       this.errorMsg = '';
       this.loading = true;
       try {
-        // Intentamos hacer una petición simple al backend para validar que está OK
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/healthcheck`); 
         
         if (!response.ok) {
           throw new Error('Error en la conexión con el backend');
         }
-        // Si todo bien, redirigimos
         this.$router.push('/crear-evento');
       } catch (error) {
         this.errorMsg = 'No se pudo conectar con la base de datos. Por favor, intente más tarde.';
